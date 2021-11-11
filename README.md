@@ -22,9 +22,9 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## What is TEARS?
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+TEARS helps you overcome tough times using the TEARs principle. TEARS stands for Talking, Exercising, Artistic writing, Recording, and Sobbing. I've started this project to help anyone going through tough times in their lives.
 
 ## Installation
 
