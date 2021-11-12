@@ -6,7 +6,7 @@ export const WriteSchema = new mongoose.Schema({
   content: { type: String, required: true }
 });
 
-export interface Write {
+export interface Write extends mongoose.Document{
   id: string;
   username: string;
   title: string;

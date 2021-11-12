@@ -6,31 +6,28 @@ import { Write } from './write.model';
 
 @Injectable()
 export class WritesService{
-  private writes: Write[] = [];
-
   constructor(
     @InjectModel('Write') private readonly writeModel: Model<Write>
-  ){}
+  ) {}
 
   async insertWrite(title: string, content: string) {
-    const newWrite = new this.writeModel({title, content});
+    const newWrite = new this.writeModel({username: 'temp_user', title, content});
     const result = await newWrite.save();
-    console.log(result);
-    return 'writeId';
+    return result.id as string;
   }
 
-  getAllWrites() {
-    return [...this.writes];
+  async getAllWrites() {
+    const writes = await this.writeModel.find().exec();
+    return writes.map((write) => ({id: write.id, username: write.username, title: write.title, content: write.content}));
   }
 
-  getSingleWrite(writeId: string) {
-    const write = this.findWrite(writeId)[0];
-    return {...write};
+  async getSingleWrite(writeId: string) {
+    const write = await this.findWrite(writeId);
+    return {id: write.id, username: write.username, title: write.title, content: write.content};
   }
 
-  updateWrite(writeId: string, writeTitle: string, writeContent: string) {
-    const [write, index] = this.findWrite(writeId);
-    const updatedWrite = {...write};
+  async updateWrite(writeId: string, writeTitle: string, writeContent: string) {
+    const updatedWrite = await this.findWrite(writeId);
 
     if (writeTitle) {
       updatedWrite.title = writeTitle;
@@ -40,21 +37,28 @@ export class WritesService{
       updatedWrite.content = writeContent;
     }
 
-    this.writes[index] = updatedWrite;
+    updatedWrite.save();
   }
 
-  removeWrite(writeId: string) {
-    const [_, index] = this.findWrite(writeId);
-    this.writes.splice(index, 1);
+  async removeWrite(writeId: string) {
+    const result = await this.writeModel.deleteOne({_id: writeId}).exec();
+    if(result.deletedCount === 0) {
+      throw new NotFoundException('Could not find write.');
+    }
   }
 
-  private findWrite(writeId: string): [Write, number] {
-    const writeIndex = this.writes.findIndex(write => write.id == writeId);
-    const write = this.writes[writeIndex];
+  private async findWrite(writeId: string): Promise<Write> {
+    let write;
+    try{
+      write = await this.writeModel.findById(writeId);
+    } catch(error){
+      throw new NotFoundException('Could not find write.');
+    }
+
     if(!write) {
       throw new NotFoundException('Could not find write.');
     }
 
-    return [write, writeIndex];
+    return write;
   }
 }

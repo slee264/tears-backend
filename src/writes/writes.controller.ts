@@ -6,30 +6,32 @@ export class WritesController {
   constructor(private writesService: WritesService) {}
 
   @Post()
-  addWrite(@Body('title') writeTitle: string, @Body('content') writeContent: string): any {
-    const generatedId= this.writesService.insertWrite(writeTitle, writeContent);
+  async addWrite(@Body('title') writeTitle: string, @Body('content') writeContent: string) {
+    const generatedId = await this.writesService.insertWrite(writeTitle, writeContent);
     return {id: generatedId };
   }
 
   @Get()
-  getAllWrites() {
-    return this.writesService.getAllWrites();
+  async getAllWrites() {
+    const writes = await this.writesService.getAllWrites();
+    return writes;
   }
 
   @Get(':writeId')
-  getWrite(@Param('writeId') writeId: string) {
-    return this.writesService.getSingleWrite(writeId);
+  async getWrite(@Param('writeId') writeId: string) {
+    const write = await this.writesService.getSingleWrite(writeId);
+    return write;
   }
 
   @Patch(':writeId')
-  updateWrite(@Param('writeId') writeId: string, @Body('title') writeTitle: string, @Body('content') writeContent: string) {
-    this.writesService.updateWrite(writeId, writeTitle, writeContent);
+  async updateWrite(@Param('writeId') writeId: string, @Body('title') writeTitle: string, @Body('content') writeContent: string) {
+    await this.writesService.updateWrite(writeId, writeTitle, writeContent);
     return null;
   }
 
   @Delete(':writeId')
-  removeWrite(@Param('writeId') writeId: string) {
-    this.writesService.removeWrite(writeId);
+  async removeWrite(@Param('writeId') writeId: string) {
+    await this.writesService.removeWrite(writeId);
     return null;
   }
 }
