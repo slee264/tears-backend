@@ -6,8 +6,8 @@ export class WritesController {
   constructor(private writesService: WritesService) {}
 
   @Post()
-  async addWrite(@Body('title') writeTitle: string, @Body('content') writeContent: string) {
-    const generatedId = await this.writesService.insertWrite(writeTitle, writeContent);
+  async addWrite(@Body('title') writeTitle: string, @Body('body') writeBody: string) {
+    const generatedId = await this.writesService.insertWrite(writeTitle, writeBody);
     return {id: generatedId };
   }
 
