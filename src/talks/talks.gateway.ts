@@ -18,7 +18,7 @@ export class TalksGateway {
 
   @SubscribeMessage('message')
   handleEvent(@MessageBody() message: string): void {
-    console.log('message received by the server')
-    this.server.emit('message', message);
+    console.log(message);
+    this.server.emit('message', 'this is a message from server');
   }
 }
