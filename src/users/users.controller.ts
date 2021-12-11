@@ -8,6 +8,7 @@ export class UsersController {
   @Post()
   async addUser(@Body('username') username: string, @Body('password') password: string, @Body('name') name: string) {
     const generatedId = await this.usersService.insertUser(username, password, name);
+    if(!generatedId)
     return {id: generatedId};
   }
 

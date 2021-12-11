@@ -14,6 +14,10 @@ export class UsersService {
   ) {}
 
   async insertUser(username: string, password: string, name: string) {
+    const user = await this.userModel.findOne({username: username});
+
+    if(user) return null;
+
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(password, salt);
 
