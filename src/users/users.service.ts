@@ -13,31 +13,22 @@ export class UsersService {
     @InjectModel('User') private readonly userModel: Model<User>
   ) {}
 
-  async insertUser(username: string, password: string, name: string) {
-    const user = await this.userModel.findOne({username: username});
-
-    if(user) return null;
+  async insertUser(username: string, password: string) {
 
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(password, salt);
 
-    const newUser = new this.userModel({username: username, password: hash, name: name});
+    const newUser = new this.userModel({username: username, password: hash});
     const result = await newUser.save();
     return result.id as string;
   }
 
   async findUser(username: string): Promise<User> {
-    let user;
-    try{
-      user = await this.userModel.findOne({username: username});
-    }catch(error){
-      throw new NotFoundException('Could not find user.');
-    }
+    const user = await this.userModel.findOne({username: username});
 
     if(!user) {
-      throw new NotFoundException('Could not find user.')
+      return null;
     }
-
     return user;
   }
 

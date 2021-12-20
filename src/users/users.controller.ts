@@ -1,15 +1,30 @@
 import { Controller, Param, Get, Post, Body } from '@nestjs/common';
 import { UsersService } from './users.service';
 
-@Controller('users')
+@Controller('account')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Post()
-  async addUser(@Body('username') username: string, @Body('password') password: string, @Body('name') name: string) {
-    const generatedId = await this.usersService.insertUser(username, password, name);
-    if(!generatedId) return null;
+  @Post('/register')
+  async addUser(@Body('username') username: string, @Body('password') password: string) {
+    const generatedId = await this.usersService.insertUser(username, password);
     return {id: generatedId};
+  }
+
+  @Post('/register/add-name')
+  async addName(@Body('username') username: string, @Body('name') name: string) {
+
+  }
+
+  @Post('/confirm-email')
+  async confirmUsername(@Body('email') username: string){
+    const userExists = await this.usersService.findUser(username);
+
+    if(userExists){
+      return true;
+    }else{
+      return false;
+    }
   }
 
   @Get(':username')
