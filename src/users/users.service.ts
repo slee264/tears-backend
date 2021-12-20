@@ -23,6 +23,13 @@ export class UsersService {
     return result.id as string;
   }
 
+  async addName(username: string, name: string) {
+    const user = await this.findUser(username);
+    user.name = name;
+    const result = await user.save();
+    return result.name as string;
+  }
+
   async findUser(username: string): Promise<User> {
     const user = await this.userModel.findOne({username: username});
 

@@ -13,7 +13,8 @@ export class UsersController {
 
   @Post('/register/add-name')
   async addName(@Body('username') username: string, @Body('name') name: string) {
-
+    const result = await this.usersService.addName(username, name);
+    return result;
   }
 
   @Post('/confirm-email')
