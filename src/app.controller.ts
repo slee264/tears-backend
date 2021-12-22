@@ -16,9 +16,15 @@ export class AppController {
     const token = await this.authService.login(req.user);
     response.cookie('access_token', token, {
       httpOnly: true,
-      domain: process.env.DOMAIN,
-      expires: new Date(Date.now() + 1000 * 60 * 60 + 24),
-    }).send({ success: true});
+    }).send({ success: true });
+  }
+
+  @Get('auth/logout')
+  async logout(@Request() req, @Res() response: Response) {
+    response.cookie('access_token', '', {
+      httpOnly: true,
+      expires: new Date(Date.now() + 1 * 1000),
+    }).send({ success: true })
   }
 
   @UseGuards(JwtAuthGuard)
