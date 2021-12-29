@@ -11,22 +11,14 @@ export class WritesController {
   @Post()
   async addWrite(@Request() req, @Body('title') writeTitle: string, @Body('body') writeBody: string) {
     const generatedId = await this.writesService.insertWrite(writeTitle, writeBody, req.user.username);
-    return {id: generatedId };
+    const writes = await this.writesService.getAllWritesBy(req.user.username);
+    return writes;
   }
 
   @UseGuards(JwtAuthGuard)
   @Get()
   async getAllWrites(@Request() req) {
     const writes = await this.writesService.getAllWritesBy(req.user.username);
-    writes.sort((a, b) => {
-      if(a.lastEdited < b.lastEdited){
-        return 1;
-      }else if(a.lastEdited > b.lastEdited){
-        return -1;
-      }else{
-        return 0;
-      }
-    })
     return writes;
   }
 
@@ -38,14 +30,17 @@ export class WritesController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':writeId')
-  async updateWrite(@Param('writeId') writeId: string, @Body('title') writeTitle: string, @Body('content') writeContent: string) {
-    await this.writesService.updateWrite(writeId, writeTitle, writeContent);
-    return null;
+  async updateWrite(@Request() req, @Param('writeId') writeId: string, @Body('title') writeTitle: string, @Body('body') writeBody: string) {
+    const id = await this.writesService.updateWrite(writeId, writeTitle, writeBody);
+    const writes = await this.writesService.getAllWritesBy(req.user.username);
+    return writes;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':writeId')
-  async removeWrite(@Param('writeId') writeId: string) {
+  async removeWrite(@Request() req, @Param('writeId') writeId: string) {
     await this.writesService.removeWrite(writeId);
-    return null;
+    const writes = await this.writesService.getAllWritesBy(req.user.username);
+    return writes;
   }
 }

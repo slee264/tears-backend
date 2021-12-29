@@ -18,7 +18,18 @@ export class WritesService{
 
   async getAllWritesBy(username: string) {
     const writes = await this.writeModel.find({ username }).exec();
-    return writes.map((write) => ({id: write.id, username: write.username, title: write.title, body: write.content, lastEdited: write.lastEdited}));
+    const mapped_writes = writes.map((write) => ({id: write.id, username: write.username, title: write.title, body: write.content, lastEdited: write.lastEdited}));
+    mapped_writes.sort((a, b) => {
+      if(a.lastEdited < b.lastEdited){
+        return 1;
+      }else if(a.lastEdited > b.lastEdited){
+        return -1;
+      }else{
+        return 0;
+      }
+    })
+
+    return mapped_writes;
   }
 
   async getSingleWriteBy(writeId: string) {
@@ -37,7 +48,8 @@ export class WritesService{
       updatedWrite.content = writeContent;
     }
     updatedWrite.lastEdited = new Date();
-    updatedWrite.save();
+    const result = await updatedWrite.save();
+    return result.id as string;
   }
 
   async removeWrite(writeId: string) {
