@@ -10,18 +10,18 @@ export class WritesService{
     @InjectModel('Write') private readonly writeModel: Model<Write>
   ) {}
 
-  async insertWrite(title: string, body: string) {
-    const newWrite = new this.writeModel({username: 'temp_user', title, content: body});
+  async insertWrite(title: string, body: string, username: string) {
+    const newWrite = new this.writeModel({username, title, content: body, lastEdited: new Date()});
     const result = await newWrite.save();
     return result.id as string;
   }
 
-  async getAllWrites() {
-    const writes = await this.writeModel.find().exec();
-    return writes.map((write) => ({id: write.id, username: write.username, title: write.title, body: write.content}));
+  async getAllWritesBy(username: string) {
+    const writes = await this.writeModel.find({ username }).exec();
+    return writes.map((write) => ({id: write.id, username: write.username, title: write.title, body: write.content, lastEdited: write.lastEdited}));
   }
 
-  async getSingleWrite(writeId: string) {
+  async getSingleWriteBy(writeId: string) {
     const write = await this.findWrite(writeId);
     return {id: write.id, username: write.username, title: write.title, body: write.content};
   }
@@ -36,7 +36,7 @@ export class WritesService{
     if (writeContent) {
       updatedWrite.content = writeContent;
     }
-
+    updatedWrite.lastEdited = new Date();
     updatedWrite.save();
   }
 
