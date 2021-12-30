@@ -11,14 +11,14 @@ export class WritesController {
   @Post()
   async addWrite(@Request() req, @Body('title') writeTitle: string, @Body('body') writeBody: string) {
     const generatedId = await this.writesService.insertWrite(writeTitle, writeBody, req.user.username);
-    const writes = await this.writesService.getAllWritesBy(req.user.username);
+    const writes = await this.writesService.getAllSortedWritesBy(req.user.username);
     return writes;
   }
 
   @UseGuards(JwtAuthGuard)
   @Get()
   async getAllWrites(@Request() req) {
-    const writes = await this.writesService.getAllWritesBy(req.user.username);
+    const writes = await this.writesService.getAllSortedWritesBy(req.user.username);
     return writes;
   }
 
@@ -32,7 +32,7 @@ export class WritesController {
   @Patch(':writeId')
   async updateWrite(@Request() req, @Param('writeId') writeId: string, @Body('title') writeTitle: string, @Body('body') writeBody: string) {
     const id = await this.writesService.updateWrite(writeId, writeTitle, writeBody);
-    const writes = await this.writesService.getAllWritesBy(req.user.username);
+    const writes = await this.writesService.getAllSortedWritesBy(req.user.username);
     return writes;
   }
 
@@ -40,7 +40,7 @@ export class WritesController {
   @Delete(':writeId')
   async removeWrite(@Request() req, @Param('writeId') writeId: string) {
     await this.writesService.removeWrite(writeId);
-    const writes = await this.writesService.getAllWritesBy(req.user.username);
+    const writes = await this.writesService.getAllSortedWritesBy(req.user.username);
     return writes;
   }
 }

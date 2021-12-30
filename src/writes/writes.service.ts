@@ -16,7 +16,7 @@ export class WritesService{
     return result.id as string;
   }
 
-  async getAllWritesBy(username: string) {
+  async getAllSortedWritesBy(username: string) {
     const writes = await this.writeModel.find({ username }).exec();
     const mapped_writes = writes.map((write) => ({id: write.id, username: write.username, title: write.title, body: write.content, lastEdited: write.lastEdited}));
     mapped_writes.sort((a, b) => {
