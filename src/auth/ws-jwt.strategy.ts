@@ -4,14 +4,14 @@ import { Injectable } from '@nestjs/common';
 import { jwtConstants } from './constants';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class WsJwtStrategy extends PassportStrategy(Strategy, 'ws-jwt') {
   constructor() {
     super({
-      jwtFromRequest: (req) => {
-        if (!req || !req.cookies) return null;
-        return req.cookies['access_token'];
+      jwtFromRequest: (socket) => {
+        if (!socket || !socket.handshake) return null;
+        return socket.handshake.headers.cookie.split('=')[1];
       },
-      ignoreExpiration: false,
+      ignoreExpiration: true,
       secretOrKey: jwtConstants.secret
     });
   }

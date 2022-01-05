@@ -16,8 +16,9 @@ export class AppController {
     const token = await this.authService.login(req.user);
     response.cookie('access_token', token, {
       httpOnly: true,
-    }).send({ success: true });
+    }).send({ user_id: req.user._id });
   }
+
 
   @Get('auth/logout')
   async logout(@Request() req, @Res() response: Response) {
