@@ -15,9 +15,9 @@ export class ConversationsController {
     await this.conversationsService.createConversation(sender._id, receiver_id);
   }
 
-  @Get()
-  async getConversation(@Request() req){
-    const conversation_list = this.conversationsService.getConversation(req.user._id);
+  @Get(':user_id')
+  async getConversation(@Param('user_id') user_id: string, @Request() req){
+    const conversation_list = this.conversationsService.getConversation(user_id);
     return conversation_list;
   }
 

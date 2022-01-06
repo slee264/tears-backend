@@ -3,6 +3,7 @@ import { Controller, Get, Post, Body, Param, Patch, Delete, Request, UseGuards }
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { MessagesService } from './messages.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('messages')
 export class MessagesController {
   constructor(
@@ -10,8 +11,9 @@ export class MessagesController {
   ) {}
 
   @Post()
-  async newMessage(@Body('conversation_id') conversation_id: string, @Request() sender, @Body('text') text: string){
-    await this.messagesService.createNewMessage(conversation_id, sender._id, text);
+  async newMessage(@Body('message') message){
+    const newMessage = await this.messagesService.createNewMessage(message.conversationId, message.sender, message.text);
+    return newMessage;
   }
 
   @Get(':conversation_id')

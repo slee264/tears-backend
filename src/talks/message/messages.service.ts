@@ -13,7 +13,8 @@ export class MessagesService{
 
   async createNewMessage(conversation_id: string, sender_id: string, text: string){
     const newMessage = new this.messageModel({conversationId: conversation_id, sender: sender_id, text: text});
-    newMessage.save();
+    const result = await newMessage.save();
+    return result;
   }
 
   async getMessage(conversation_id: string){
