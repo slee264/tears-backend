@@ -3,11 +3,11 @@ import { WritesService } from './writes.service';
 
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('writes')
 export class WritesController {
   constructor(private writesService: WritesService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   async addWrite(@Request() req, @Body('title') writeTitle: string, @Body('body') writeBody: string) {
     const generatedId = await this.writesService.insertWrite(writeTitle, writeBody, req.user.username);
@@ -15,7 +15,6 @@ export class WritesController {
     return writes;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   async getAllWrites(@Request() req) {
     const writes = await this.writesService.getAllSortedWritesBy(req.user.username);
@@ -28,7 +27,6 @@ export class WritesController {
     return write;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':writeId')
   async updateWrite(@Request() req, @Param('writeId') writeId: string, @Body('title') writeTitle: string, @Body('body') writeBody: string) {
     const id = await this.writesService.updateWrite(writeId, writeTitle, writeBody);
@@ -36,7 +34,6 @@ export class WritesController {
     return writes;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':writeId')
   async removeWrite(@Request() req, @Param('writeId') writeId: string) {
     await this.writesService.removeWrite(writeId);
