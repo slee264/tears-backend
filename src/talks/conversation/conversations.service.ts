@@ -11,10 +11,10 @@ export class ConversationsService{
     @InjectModel('Conversation') private readonly conversationModel: Model<Conversation>,
   ) {}
 
-  async createConversation(sender_id: any, receiver_id: string){
+  async createConversation(sender_id: string, receiver_id: string){
     const newConversation = new this.conversationModel({members: [sender_id, receiver_id]});
     const result = await newConversation.save();
-    return result.id as string;
+    return result;
   }
 
   async getConversation(user_id: string){

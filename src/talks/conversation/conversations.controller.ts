@@ -11,8 +11,9 @@ export class ConversationsController {
   ) {}
 
   @Post()
-  async newConversation(@Request() sender, @Body('receiver_id') receiver_id: string){
-    await this.conversationsService.createConversation(sender._id, receiver_id);
+  async newConversation(@Body('sender_id') sender_id: string, @Body('receiver_id') receiver_id: string){
+    const new_conversation = await this.conversationsService.createConversation(sender_id, receiver_id);
+    return new_conversation;
   }
 
   @Get(':user_id')
