@@ -17,7 +17,7 @@ export class UsersService {
 
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(password, salt);
- 
+
     const newUser = new this.userModel({username: username, password: hash});
     const result = await newUser.save();
     return result.id as string;
@@ -49,6 +49,11 @@ export class UsersService {
       return null;
     }
     return user;
+  }
+
+  async getUsers(name: string){
+    const userList = await this.userModel.find({ $or: [{username: name}, {name: name}]}).exec();
+    return userList;
   }
 
 }

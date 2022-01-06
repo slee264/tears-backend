@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Body, Param, Patch, Delete, Request, UseGuards } from '@nestjs/common';
 import { TalksService } from './talks.service';
+import { UsersService } from '../users/users.service';
 
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -7,6 +8,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 export class TalksController {
   constructor(
     private talksService: TalksService,
+    private usersService: UsersService
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -31,7 +33,7 @@ export class TalksController {
   @UseGuards(JwtAuthGuard)
   @Post('search_user')
   async getUser(@Body('username_or_name') name: string){
-    const list = await this.talksService.getUserList(name);
+    const list = await this.usersService.getUsers(name);
     let return_list = [];
     list.map((item) => return_list.push({id: item._id, username: item.username, name: item.name}));
     return return_list;
